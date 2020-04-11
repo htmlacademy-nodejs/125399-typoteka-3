@@ -14,3 +14,5 @@ if (userArguments.length === 0 || !Cli[userCommand]) {
   Cli[DEFAULT_COMMAND].run();
   process.exit(ExitCode.success);
 }
+
+Cli[userCommand].run(userArguments.slice(1));

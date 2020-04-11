@@ -14,3 +14,5 @@ module.exports.shuffle = (someArray) => {
 
   return someArray;
 };
+
+module.exports.getRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
