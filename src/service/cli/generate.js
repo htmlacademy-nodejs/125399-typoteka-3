@@ -12,6 +12,7 @@ const fs = require(`fs`);
 
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;
+const DATE_LIMIT = 2;
 const FILE_NAME = `mocks.json`;
 const ANNOUNCE_LIMIT = 5;
 
@@ -65,9 +66,14 @@ const CATEGORIES = [
   `Железо`
 ];
 
-const generateAnnounceLength = () => getRandomInt(1, ANNOUNCE_LIMIT);
-const getStartMonth = () => new Date().getMonth() - 2;
+const generateCreatedDate = (countMonthsAgo) => {
+  const startDate = new Date(new Date().getFullYear(), new Date().getMonth() - countMonthsAgo, 1);
+  const endDate = new Date();
+  const fakeDate = getRandomDate(startDate, endDate);
+  return fakeDate;
+};
 
+const generateAnnounceLength = () => getRandomInt(1, ANNOUNCE_LIMIT);
 const generateTitle = () => TITLES[getRandomInt(0, TITLES.length - 1)];
 const generateAnnounce = (announceLimit) => shuffle(SENTENCES).slice(1, announceLimit).join(` `);
 const generateFullText = (announceLimit) => shuffle(SENTENCES).slice(announceLimit, SENTENCES.length - 1).join(` `);
@@ -81,7 +87,7 @@ const generateOffers = (count) => {
     const announceLimit = generateAnnounceLength();
     offersArray.push({
       title: generateTitle(),
-      createdDate: getRandomDate(new Date(new Date().getFullYear(), getStartMonth(), 1), new Date()).toISOString(),
+      createdDate: generateCreatedDate(DATE_LIMIT),
       announce: generateAnnounce(announceLimit),
       fullText: generateFullText(announceLimit),
       category: [generateCategory()]
@@ -91,16 +97,17 @@ const generateOffers = (count) => {
   return offersArray;
 };
 
-const writeToFile = (content) => {
-  fs.writeFile(FILE_NAME, content, (err) => {
-    if (err) {
-      console.log(`Can't write data to file...`);
-      process.exit(ExitCode.error);
-    }
 
+const resolveGeneration = (content) => {
+  try {
+    fs.writeFileSync(FILE_NAME, content);
+  } catch (err) {
+    console.log(`Can't write data to file...`);
+    process.exit(ExitCode.error);
+  } finally {
     console.info(`Operation success. File created.`);
     process.exit(ExitCode.success);
-  });
+  }
 };
 
 module.exports = {
@@ -117,6 +124,6 @@ module.exports = {
     const offers = generateOffers(countOffer);
     const content = JSON.stringify(offers);
 
-    writeToFile(content);
+    resolveGeneration(content);
   }
 };
