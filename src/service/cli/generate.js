@@ -97,22 +97,15 @@ const generateOffers = (count) => {
   return offersArray;
 };
 
-
-const resolveGeneration = (content) => {
-  try {
-    fs.writeFileSync(FILE_NAME, content);
-  } catch (err) {
-    console.log(`Can't write data to file...`);
-    process.exit(ExitCode.error);
-  } finally {
-    console.info(`Operation success. File created.`);
-    process.exit(ExitCode.success);
-  }
+const writeToFile = (content) => {
+  fs.writeFile(FILE_NAME, content, () => {
+    console.info(chalk.green(`Operation success. File created.`));
+  });
 };
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
@@ -123,7 +116,11 @@ module.exports = {
 
     const offers = generateOffers(countOffer);
     const content = JSON.stringify(offers);
-
-    resolveGeneration(content);
+    try {
+      await writeToFile(content);
+    } catch (err) {
+      console.error(chalk.red(`Can't write data to file...`));
+      process.exit(ExitCode.error);
+    }
   }
 };
