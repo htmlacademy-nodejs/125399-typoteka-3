@@ -8,7 +8,7 @@ const {
   getRandomDate,
   shuffle
 } = require(`../../utils`);
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
 
 const DEFAULT_COUNT = 1;
 const MAX_COUNT = 1000;
@@ -98,9 +98,7 @@ const generateOffers = (count) => {
 };
 
 const writeToFile = (content) => {
-  fs.writeFile(FILE_NAME, content, () => {
-    console.info(chalk.green(`Operation success. File created.`));
-  });
+  fs.writeFile(FILE_NAME, content);
 };
 
 module.exports = {
@@ -118,6 +116,7 @@ module.exports = {
     const content = JSON.stringify(offers);
     try {
       await writeToFile(content);
+      console.info(chalk.green(`Operation success. File created.`));
     } catch (err) {
       console.error(chalk.red(`Can't write data to file...`));
       process.exit(ExitCode.error);
