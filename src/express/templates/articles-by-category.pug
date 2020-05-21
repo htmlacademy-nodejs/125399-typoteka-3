@@ -1,0 +1,106 @@
+extends layout.pug
+
+block content
+  main.articles-category
+    h1 &Bcy;&icy;&zcy;&ncy;&iecy;&scy;
+    section.articles-category__theme-list
+      h2.visually-hidden &Scy;&pcy;&icy;&scy;&ocy;&kcy; &tcy;&iecy;&mcy;
+      ul.themes
+        li.themes__item
+          a.themes__item-link(href='#')
+            | &Acy;&vcy;&tcy;&ocy;&mcy;&ocy;&bcy;&icy;&lcy;&icy;
+            sup 88
+        li.themes__item
+          a.themes__item-link(href='#')
+            | &Ucy;&dcy;&acy;&lcy;&iecy;&ncy;&ncy;&acy;&yacy; &rcy;&acy;&bcy;&ocy;&tcy;&acy;
+            sup 13
+        li.themes__item
+          a.themes__item-link.themes__item-link--active
+            | &Bcy;&icy;&zcy;&ncy;&iecy;&scy;
+            sup 13
+        li.themes__item
+          a.themes__item-link(href='#')
+            | &Pcy;&ucy;&tcy;&iecy;&shcy;&iecy;&scy;&tcy;&vcy;&icy;&yacy;
+            sup 13
+        li.themes__item
+          a.themes__item-link.themes__item-link--padding(href='#')
+            | &Dcy;&icy;&zcy;&acy;&jcy;&ncy; &icy; &ocy;&bcy;&ucy;&scy;&tcy;&rcy;&ocy;&jcy;&scy;&tcy;&vcy;&ocy;
+            sup 13
+        li.themes__item
+          a.themes__item-link(href='#')
+            | &Pcy;&rcy;&ocy;&icy;&zcy;&vcy;&ocy;&dcy;&scy;&tcy;&vcy;&ocy; &icy;&gcy;&rcy;&ucy;&shcy;&iecy;&kcy;
+            sup 22
+        li.themes__item
+          a.themes__item-link(href='#')
+            | UX &amp; UI
+            sup 22
+    section.articles-category__list.preview
+      h2.visually-hidden &Scy;&pcy;&icy;&scy;&ocy;&kcy; &pcy;&rcy;&iecy;&vcy;&softcy;&yucy; &scy;&tcy;&acy;&tcy;&iecy;&jcy;
+      ul.preview__list
+        li.preview__item
+          ul.preview__breadcrumbs
+            li.preview__breadcrumbs-item
+              a.preview__breadcrumbs-link(href='#') &Dcy;&icy;&zcy;&acy;&jcy;&ncy;
+          .preview__background
+            img.preview__background-image(src='img/skyscraper@1x.jpg' width='460' height='240' srcset='img/skyscraper@1x.jpg 1x, img/skyscraper@2x.jpg 2x' alt='Фотография небоскреба')
+          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
+          h3.preview__name
+            a.preview__name-link(href='#') &YAcy; &ncy;&icy;&chcy;&iecy;&gcy;&ocy; &ncy;&iecy; &pcy;&ocy;&ncy;&yacy;&lcy;
+          p.preview__text
+            | &IEcy;&scy;&lcy;&icy; &vcy;&ycy; &scy;&acy;&mcy;&icy; &pcy;&icy;&shcy;&iecy;&tcy;&iecy; &tcy;&acy;&kcy;&icy;&iecy; &pcy;&icy;&scy;&softcy;&mcy;&acy; &mdash; &pcy;&ocy;&chcy;&icy;&tcy;&acy;&jcy;&tcy;&iecy; &Icy;&lcy;&softcy;&yacy;&khcy;&ocy;&vcy;&acy;.
+            | &Acy; &vcy; &ecy;&tcy;&ocy;&jcy; &zcy;&acy;&mcy;&iecy;&tcy;&kcy;&iecy; &yacy; &rcy;&acy;&scy;&scy;&kcy;&acy;&zhcy;&ucy; &pcy;&rcy;&ocy; &zcy;&acy;&kcy;&lcy;&icy;&ncy;&acy;&ncy;&icy;&iecy;, &kcy;&ocy;&tcy;&ocy;&rcy;&ocy;&iecy; &ocy;&tcy; &tcy;&acy;&kcy;&icy;&khcy; &pcy;&icy;&scy;&iecy;&mcy; &pcy;&ocy;&mcy;&ocy;&gcy;&acy;&iecy;&tcy;.
+          a.preview__comment(href='#')
+            | &Kcy;&ocy;&mcy;&mcy;&iecy;&ncy;&tcy;&acy;&rcy;&icy;&icy;
+            span.preview__cloud
+            b.preview__comment-count 12
+        li.preview__item
+          ul.preview__breadcrumbs
+            li.preview__breadcrumbs-item
+              a.preview__breadcrumbs-link(href='#') &Dcy;&icy;&zcy;&acy;&jcy;&ncy;
+          .preview__background
+            img.preview__background-image(src='img/sea@1x.jpg' width='460' height='240' srcset='img/sea@1x.jpg 1x, img/sea@2x.jpg 2x' alt='Фотография моря')
+          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
+          h3.preview__name
+            a.preview__name-link(href='#') &Pcy;&ucy;&tcy;&iecy;&shcy;&iecy;&scy;&tcy;&vcy;&icy;&iecy; &vcy; &Gcy;&ocy;&lcy;&lcy;&acy;&ncy;&dcy;&icy;&yucy;
+          p.preview__text
+            | &IEcy;&scy;&lcy;&icy; &vcy;&ycy; &scy;&acy;&mcy;&icy; &pcy;&icy;&shcy;&iecy;&tcy;&iecy; &tcy;&acy;&kcy;&icy;&iecy; &pcy;&icy;&scy;&softcy;&mcy;&acy; &mdash; &pcy;&ocy;&chcy;&icy;&tcy;&acy;&jcy;&tcy;&iecy; &Icy;&lcy;&softcy;&yacy;&khcy;&ocy;&vcy;&acy;.
+            | &Acy; &vcy; &ecy;&tcy;&ocy;&jcy; &zcy;&acy;&mcy;&iecy;&tcy;&kcy;&iecy; &yacy; &rcy;&acy;&scy;&scy;&kcy;&acy;&zhcy;&ucy; &pcy;&rcy;&ocy; &zcy;&acy;&kcy;&lcy;&icy;&ncy;&acy;&ncy;&icy;&iecy;, &kcy;&ocy;&tcy;&ocy;&rcy;&ocy;&iecy; &ocy;&tcy; &tcy;&acy;&kcy;&icy;&khcy; &pcy;&icy;&scy;&iecy;&mcy; &pcy;&ocy;&mcy;&ocy;&gcy;&acy;&iecy;&tcy;.
+          a.preview__comment(href='#')
+            | &Kcy;&ocy;&mcy;&mcy;&iecy;&ncy;&tcy;&acy;&rcy;&icy;&icy;
+            span.preview__cloud
+            b.preview__comment-count 12
+        li.preview__item.preview__item--noimage
+          ul.preview__breadcrumbs
+            li.preview__breadcrumbs-item
+              a.preview__breadcrumbs-link(href='#') &Dcy;&icy;&zcy;&acy;&jcy;&ncy;
+          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
+          h3.preview__name
+            a.preview__name-link(href='#')
+              | &Pcy;&ucy;&tcy;&icy;&ncy; &pcy;&ocy;&dcy;&pcy;&icy;&scy;&acy;&lcy; &zcy;&acy;&kcy;&ocy;&ncy; &ocy; &pcy;&rcy;&iecy;&dcy;&ucy;&scy;&tcy;&acy;&ncy;&ocy;&vcy;&kcy;&iecy; &rcy;&ocy;&scy;&scy;&icy;&jcy;&scy;&kcy;&icy;&khcy; &pcy;&rcy;&icy;&lcy;&ocy;&zhcy;&iecy;&ncy;&icy;&jcy; &ncy;&acy; &scy;&mcy;&acy;&rcy;&tcy;&fcy;&ocy;&ncy;&ycy; &icy; &dcy;&rcy;&ucy;&gcy;&ucy;&yucy; &ecy;&lcy;&iecy;&kcy;&tcy;&rcy;&ocy;&ncy;&icy;&kcy;&ucy;
+          p.preview__text
+            | &Pcy;&rcy;&iecy;&zcy;&icy;&dcy;&iecy;&ncy;&tcy; &Rcy;&ocy;&scy;&scy;&icy;&icy; &Vcy;&lcy;&acy;&dcy;&icy;&mcy;&icy;&rcy; &Pcy;&ucy;&tcy;&icy;&ncy; &pcy;&ocy;&dcy;&pcy;&icy;&scy;&acy;&lcy; &zcy;&acy;&kcy;&ocy;&ncy; &ocy;&bcy; &ocy;&bcy;&yacy;&zcy;&acy;&tcy;&iecy;&lcy;&softcy;&ncy;&ocy;&jcy; &pcy;&rcy;&iecy;&dcy;&ucy;&scy;&tcy;&acy;&ncy;&ocy;&vcy;&kcy;&iecy;
+            | &rcy;&ocy;&scy;&scy;&icy;&jcy;&scy;&kcy;&ocy;&gcy;&ocy; &pcy;&rcy;&ocy;&gcy;&rcy;&acy;&mcy;&mcy;&ncy;&ocy;&gcy;&ocy;
+            | &ocy;&bcy;&iecy;&scy;&pcy;&iecy;&chcy;&iecy;&ncy;&icy;&yacy; &ncy;&acy; &ecy;&lcy;&iecy;&kcy;&tcy;&rcy;&ocy;&ncy;&ncy;&ucy;&yucy; &tcy;&iecy;&khcy;&ncy;&icy;&kcy;&ucy;, &pcy;&rcy;&ocy;&dcy;&acy;&vcy;&acy;&iecy;&mcy;&ucy;&yucy; &vcy; &Rcy;&ocy;&scy;&scy;&icy;&icy;. &Dcy;&ocy;&kcy;&ucy;&mcy;&iecy;&ncy;&tcy; &ocy;&pcy;&ucy;&bcy;&lcy;&icy;&kcy;&ocy;&vcy;&acy;&ncy; &ncy;&acy; &ocy;&fcy;&icy;&tscy;&icy;&acy;&lcy;&softcy;&ncy;&ocy;&mcy; &scy;&acy;&jcy;&tcy;&iecy;
+            | &pcy;&rcy;&acy;&vcy;&ocy;&vcy;&ocy;&jcy; &icy;&ncy;&fcy;&ocy;&rcy;&mcy;&acy;&tscy;&icy;&icy;.
+          a.preview__comment(href='#')
+            | &Kcy;&ocy;&mcy;&mcy;&iecy;&ncy;&tcy;&acy;&rcy;&icy;&icy;
+            span.preview__cloud
+            b.preview__comment-count 12
+        li.preview__item
+          ul.preview__breadcrumbs
+            li.preview__breadcrumbs-item
+              a.preview__breadcrumbs-link(href='#') &Dcy;&icy;&zcy;&acy;&jcy;&ncy;
+            li.preview__breadcrumbs-item
+              a.preview__breadcrumbs-link(href='#') &Ucy;&dcy;&acy;&lcy;&iecy;&ncy;&ncy;&acy;&yacy; &rcy;&acy;&bcy;&ocy;&tcy;&acy;
+          .preview__background
+            img(src='img/forest@1x.jpg' width='460' height='240' srcset='img/forest@1x.jpg 1x, img/forest@2x.jpg 2x' alt='Фотография леса')
+          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
+          h3.preview__name
+            a.preview__name-link(href='#') &YAcy; &pcy;&ocy;&ncy;&yacy;&lcy;, &ncy;&ocy; &ncy;&iecy; &vcy;&scy;&iecy;
+          p.preview__text
+            | &IEcy;&scy;&lcy;&icy; &vcy;&ycy; &scy;&acy;&mcy;&icy; &pcy;&icy;&shcy;&iecy;&tcy;&iecy; &tcy;&acy;&kcy;&icy;&iecy; &pcy;&icy;&scy;&softcy;&mcy;&acy; &mdash; &pcy;&ocy;&chcy;&icy;&tcy;&acy;&jcy;&tcy;&iecy; &Icy;&lcy;&softcy;&yacy;&khcy;&ocy;&vcy;&acy;.
+            | &Acy; &vcy; &ecy;&tcy;&ocy;&jcy; &zcy;&acy;&mcy;&iecy;&tcy;&kcy;&iecy; &yacy; &rcy;&acy;&scy;&scy;&kcy;&acy;&zhcy;&ucy; &pcy;&rcy;&ocy; &zcy;&acy;&kcy;&lcy;&icy;&ncy;&acy;&ncy;&icy;&iecy;, &kcy;&ocy;&tcy;&ocy;&rcy;&ocy;&iecy; &ocy;&tcy; &tcy;&acy;&kcy;&icy;&khcy; &pcy;&icy;&scy;&iecy;&mcy; &pcy;&ocy;&mcy;&ocy;&gcy;&acy;&iecy;&tcy;.
+          a.preview__comment(href='#')
+            | &Kcy;&ocy;&mcy;&mcy;&iecy;&ncy;&tcy;&acy;&rcy;&icy;&icy;
+            span.preview__cloud
+            b.preview__comment-count 12
