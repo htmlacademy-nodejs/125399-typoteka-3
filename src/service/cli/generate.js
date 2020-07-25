@@ -1,6 +1,6 @@
 'use strict';
 const chalk = require(`chalk`);
-const { nanoid } = require(`nanoid`);
+const {nanoid} = require(`nanoid`);
 const {
   ExitCode,
   FILENAME,
@@ -55,12 +55,12 @@ const generateComments = (count, comments) =>(
   }))
 );
 
-const generateOffers = (count, titles, categories, sentences, comments) => {
-  let offersArray = [];
+const generateArticles = (count, titles, categories, sentences, comments) => {
+  let articlesArray = [];
 
   for (let i = 0; i < count; i++) {
     const announceLimit = generateAnnounceLength();
-    offersArray.push({
+    articlesArray.push({
       id: nanoid(MAX_ID_LENGTH),
       title: generateTitle(titles),
       createdDate: generateCreatedDate(DATE_LIMIT),
@@ -71,7 +71,7 @@ const generateOffers = (count, titles, categories, sentences, comments) => {
     });
   }
 
-  return offersArray;
+  return articlesArray;
 };
 
 
@@ -80,9 +80,9 @@ module.exports = {
   async run(args) {
     try {
       const [count] = args;
-      const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
+      const countArticle = Number.parseInt(count, 10) || DEFAULT_COUNT;
 
-      if (countOffer > MAX_COUNT) {
+      if (countArticle > MAX_COUNT) {
         console.log(chalk.red(`Ошибка. Максимальное число файлов ${MAX_COUNT}`));
         process.exit(ExitCode.error);
       }
@@ -100,8 +100,8 @@ module.exports = {
           readComments
         ]);
 
-      const offers = generateOffers(countOffer, titles, categories, sentences, comments);
-      const content = JSON.stringify(offers);
+      const articles = generateArticles(countArticle, titles, categories, sentences, comments);
+      const content = JSON.stringify(articles);
 
       await fs.writeFile(FILENAME, content);
       console.log(chalk.green(`Operation success. File created.`));
