@@ -5,7 +5,7 @@
   "main": "./src/service/service.js",
   "scripts": {
     "start": "node ./src/service/service.js",
-    "generate": "node ./src/service/service.js --generate 10",
+    "generate": "node ./src/service/service.js --generate",
     "server": "npm run generate && nodemon ./src/service/service.js --server",
     "test": "npm run eslint",
     "eslint": "eslint --ext .js src/",
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "express": "4.17.1",
+    "nanoid": "3.1.10",
     "pug": "2.0.4"
   }
 }
