@@ -2,9 +2,13 @@
 
 module.exports.FILENAME = `mocks.json`;
 
+module.exports.MAX_ID_LENGTH = 6;
+
 module.exports.DEFAULT_COMMAND = `--help`;
 
 module.exports.USER_ARGV_INDEX = 2;
+
+module.exports.API_PREFIX = `/api`;
 
 module.exports.ExitCode = {
   error: 1,

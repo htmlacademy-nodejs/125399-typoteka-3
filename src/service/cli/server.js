@@ -2,19 +2,21 @@
 
 const {
   HttpCode,
+  API_PREFIX
 } = require(`../../constants`);
 
-const postsRouter = require(`./routes/posts.routes`);
 
 const chalk = require(`chalk`);
+const routes = require(`../api`);
 const express = require(`express`);
+
+const app = express();
 
 const DEFAULT_PORT = 3000;
 
-const app = express();
-app.use(express.json());
+app.use(API_PREFIX, routes);
 
-app.use(`/posts`, postsRouter);
+app.use(express.json());
 
 app.use((req, res) => res
   .status(HttpCode.NOT_FOUND)
