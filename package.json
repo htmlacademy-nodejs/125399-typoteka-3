@@ -7,7 +7,7 @@
     "start": "node ./src/service/service.js",
     "generate": "node ./src/service/service.js --generate",
     "server": "npm run generate && nodemon ./src/service/service.js --server",
-    "test": "npm run eslint",
+    "test": "npm run eslint && jest",
     "eslint": "eslint --ext .js src/",
     "start-front-server": "node ./src/express/index.js"
   },
@@ -24,7 +24,9 @@
   "devDependencies": {
     "eslint": "6.8.0",
     "eslint-config-htmlacademy": "0.5.2",
-    "nodemon": "2.0.3"
+    "jest": "26.4.2",
+    "nodemon": "2.0.3",
+    "supertest": "4.0.2"
   },
   "dependencies": {
     "express": "4.17.1",
