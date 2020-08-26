@@ -7,7 +7,8 @@
     "start": "node ./src/service/service.js",
     "generate": "node ./src/service/service.js --generate",
     "server": "npm run generate && nodemon ./src/service/service.js --server",
-    "test": "npm run eslint && jest",
+    "test": "npm run eslint && npm run test::rest",
+    "test::rest": "jest",
     "eslint": "eslint --ext .js src/",
     "start-front-server": "node ./src/express/index.js"
   },
