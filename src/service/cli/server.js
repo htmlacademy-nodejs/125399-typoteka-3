@@ -19,9 +19,9 @@ const createApp = async (data) => {
   const app = express();
   const apiRoutes = await createApi(data);
 
+  app.use(express.json());
   app.use(API_PREFIX, apiRoutes);
 
-  app.use(express.json());
 
   app.use((req, res) => res
     .status(HttpCode.NOT_FOUND)
