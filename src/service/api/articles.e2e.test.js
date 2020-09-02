@@ -60,10 +60,6 @@ describe(`Create new article`, () => {
         expect(actual.body).toHaveProperty(`id`);
       });
 
-      test(`Should return object with comments`, () => {
-        expect(actual.body).toHaveProperty(`comments`);
-        expect(actual.body.comments).toBeInstanceOf(Array);
-      });
     });
 
     // get article
@@ -93,7 +89,7 @@ describe(`Create new article`, () => {
         const targetArticleResult = await request(server).put(`/api/articles/${actual.body.id}`).send(newObj);
 
         expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
-        expect(actual.body.comments).toBeInstanceOf(Object);
+        expect(targetArticleResult.body.comments).toBeInstanceOf(Object);
       });
 
       test(`Should return status ${HttpCode.NOT_FOUND} for update article request with wrong ID`, async () => {
@@ -181,5 +177,84 @@ describe(`Create new article`, () => {
 
       });
     });
+  });
+});
+
+// comments
+describe(`Comments tests`, () => {
+  let actual = null;
+  let comment = null;
+
+  describe(`Create new article`, () => {
+    beforeAll(async () => {
+      const testObj = {
+        "title": `title-1`,
+        "createdDate": `2020-07-14T16:33:44.300Z`,
+        "announce": `announce-1`,
+        "fullText": `fullText-1`,
+        "category": [`category-1`],
+      };
+
+      actual = await request(server).post(`/api/articles`).send(testObj);
+    });
+
+    describe(`Create comment with valid params`, () => {
+      beforeAll(async () => {
+        const newComment = {
+          text: `comment text`
+        };
+
+        comment = await request(server).post(`/api/articles/${actual.body.id}/comments`).send(newComment);
+      });
+
+      // post
+      describe(`Creating results`, () => {
+        test(`Should return object with comments by new article creating`, () => {
+          expect(actual.body).toHaveProperty(`comments`);
+          expect(actual.body.comments).toBeInstanceOf(Array);
+        });
+
+        test(`Should return status ${HttpCode.CREATED} by new comment creating`, () => {
+          expect(comment.statusCode).toBe(HttpCode.CREATED);
+        });
+
+        test(`Should return object with id`, () => {
+          expect(comment.body).toBeInstanceOf(Object);
+          expect(comment.body).toHaveProperty(`id`);
+        });
+      });
+
+      // get
+      describe(`Get comments by article ID`, () => {
+        test(`Should return status ${HttpCode.OK} for getting article comments & return array`, async () => {
+          const targetArticleComments = await request(server).get(`/api/articles/${actual.body.id}/comments`);
+
+          expect(targetArticleComments.statusCode).toBe(HttpCode.OK);
+          expect(targetArticleComments.body).toBeInstanceOf(Array);
+        });
+
+        test(`Should return status ${HttpCode.NOT_FOUND} for getting article comments with wrong article ID`, async () => {
+          const targetArticleComments = await request(server).get(`/api/articles/wrongId/comments`);
+          expect(targetArticleComments.statusCode).toBe(HttpCode.NOT_FOUND);
+        });
+      });
+
+      // delete
+      describe(`Delete comment by ID`, () => {
+        test(`Should return status ${HttpCode.OK} & return deleted object for delete article comment`, async () => {
+          const targetArticleComment = await request(server).delete(`/api/articles/${actual.body.id}/comments/${comment.body.id}`);
+
+          expect(targetArticleComment.statusCode).toBe(HttpCode.OK);
+          expect(targetArticleComment.body).toBeInstanceOf(Object);
+        });
+
+        test(`Should return status ${HttpCode.NOT_FOUND} for delete article comment with wrong ID`, async () => {
+          const targetArticleComment = await request(server).delete(`/api/articles/${actual.body.id}/comments/wrongId`);
+          expect(targetArticleComment.statusCode).toBe(HttpCode.NOT_FOUND);
+        });
+      });
+
+    });
+
   });
 });

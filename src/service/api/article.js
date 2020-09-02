@@ -71,9 +71,22 @@ module.exports = (app, articleService, commentService) => {
     const {article} = res.locals;
     const comments = commentService.findAll(article);
 
-    res.status(HttpCode.OK)
+    if (!article) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`Not found`);
+    }
+
+    return res.status(HttpCode.OK)
       .json(comments);
 
+  });
+
+  articlesRouter.post(`/:articleId/comments`, [articleExist(articleService), commentValidator], (req, res) => {
+    const {article} = res.locals;
+    const comment = commentService.create(article, req.body);
+
+    return res.status(HttpCode.CREATED)
+      .json(comment);
   });
 
   articlesRouter.delete(`/:articleId/comments/:commentId`, articleExist(articleService), (req, res) => {
@@ -90,12 +103,6 @@ module.exports = (app, articleService, commentService) => {
       .json(deletedComment);
   });
 
-  articlesRouter.post(`/:articleId/comments`, [articleExist(articleService), commentValidator], (req, res) => {
-    const {article} = res.locals;
-    const comment = commentService.create(article, req.body);
 
-    return res.status(HttpCode.CREATED)
-      .json(comment);
-  });
 };
 
