@@ -15,22 +15,22 @@ beforeAll(async () => {
 
 describe(`Search API end-points`, () => {
   test(`Should return status ${HttpCode.OK} on GET request`, async () => {
-    const res = await request(server).get(encodeURI(`/api/search?query=title`));
+    const actual = await request(server).get(encodeURI(`/api/search?query=title`));
 
-    expect(res.statusCode).toBe(HttpCode.OK);
-    expect(res.body).toHaveLength(2);
+    expect(actual.statusCode).toBe(HttpCode.OK);
+    expect(actual.body).toBeInstanceOf(Array);
   });
 
   test(`Should return status ${HttpCode.BAD_REQUEST} for empty request`, async () => {
-    const res = await request(server).get(encodeURI(`/api/search?query=`));
+    const actual = await request(server).get(encodeURI(`/api/search?query=`));
 
-    expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+    expect(actual.statusCode).toBe(HttpCode.BAD_REQUEST);
   });
 
   test(`Should return status ${HttpCode.NOT_FOUND} for wrong request`, async () => {
-    const res = await request(server).get(encodeURI(`/api/search?query=${null}`));
+    const actual = await request(server).get(encodeURI(`/api/search?query=${null}`));
 
-    expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    expect(actual.statusCode).toBe(HttpCode.NOT_FOUND);
   });
 });
 

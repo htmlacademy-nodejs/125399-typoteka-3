@@ -47,48 +47,76 @@ describe(`Create new article`, () => {
     });
 
     // post
-    test(`Should return ${expectedHttpCode} by post`, () => {
-      expect(actual.statusCode).toBe(expectedHttpCode);
-    });
+    describe(`post requests`, () => {
+      test(`Should return ${expectedHttpCode} by post`, () => {
+        expect(actual.statusCode).toBe(expectedHttpCode);
+      });
 
-    test(`Should return expected object by post`, () => {
-      expect(actual.body).toMatchObject(expected);
-    });
+      test(`Should return expected object by post`, () => {
+        expect(actual.body).toMatchObject(expected);
+      });
 
-    test(`Should return object with id`, () => {
-      expect(actual.body).toHaveProperty(`id`);
-    });
+      test(`Should return object with id`, () => {
+        expect(actual.body).toHaveProperty(`id`);
+      });
 
-    test(`Should return object with comments`, () => {
-      expect(actual.body).toHaveProperty(`comments`);
-      expect(actual.body.comments).toBeInstanceOf(Array);
+      test(`Should return object with comments`, () => {
+        expect(actual.body).toHaveProperty(`comments`);
+        expect(actual.body.comments).toBeInstanceOf(Array);
+      });
     });
-
 
     // get article
-    test(`Should get article with valid id`, async () => {
-      const targetArticleResult = await request(server).get((`/api/articles/${actual.body.id}`));
-      expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
-      expect(targetArticleResult.body.id).toBe(actual.body.id);
-    });
-    test(`Should return status ${HttpCode.NOT_FOUND} for wrong request`, async () => {
-      const targetArticleResult = await request(server).get((`/api/articles/wrongId`));
-      expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
+    describe(`get requests article by id`, () => {
+      test(`Should get article with valid id`, async () => {
+        const targetArticleResult = await request(server).get((`/api/articles/${actual.body.id}`));
+        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
+        expect(targetArticleResult.body.id).toBe(actual.body.id);
+      });
+      test(`Should return status ${HttpCode.NOT_FOUND} for wrong request`, async () => {
+        const targetArticleResult = await request(server).get((`/api/articles/wrongId`));
+        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
+      });
     });
 
     // put
+    describe(`put requests`, () => {
+      const newObj = {
+        "title": `title-2`,
+        "createdDate": `2020-07-14T16:33:44.300Z`,
+        "announce": `announce-1`,
+        "fullText": `fullText-1`,
+        "category": [`category-1`],
+      };
+      test(`Should return status ${HttpCode.OK} for article update & updated object`, async () => {
+
+        const targetArticleResult = await request(server).put(`/api/articles/${actual.body.id}`).send(newObj);
+
+        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
+        expect(actual.body.comments).toBeInstanceOf(Object);
+      });
+
+      test(`Should return status ${HttpCode.NOT_FOUND} for update article request with wrong ID`, async () => {
+        const targetArticleResult = await request(server).put(`/api/articles/wrongId`).send(newObj);
+        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
+      });
+    });
+
 
     // delete
-    test(`Should return status ${HttpCode.OK} for delete article request`, async () => {
-      const targetArticleResult = await request(server).delete(`/api/articles/${actual.body.id}`);
+    describe(`delete requests`, () => {
+      test(`Should return status ${HttpCode.OK} for delete article request`, async () => {
+        const targetArticleResult = await request(server).delete(`/api/articles/${actual.body.id}`);
 
-      expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
+        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
+      });
+
+      test(`Should return status ${HttpCode.NOT_FOUND} for delete article request with wrong ID`, async () => {
+        const targetArticleResult = await request(server).delete(`/api/articles/wrongId`);
+        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
+      });
     });
 
-    test(`Should return status ${HttpCode.NOT_FOUND} for delete offer request with wrong ID`, async () => {
-      const targetArticleResult = await request(server).delete(`/api/articles/wrongId`);
-      expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
-    });
   });
 
   describe(`Create new article with invalid params`, () => {
