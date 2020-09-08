@@ -13,6 +13,10 @@ beforeAll(async () => {
   server = await createApp(articlesMocks);
 });
 
+afterAll(() => {
+  server = null;
+});
+
 describe(`Get all articles`, () => {
   const expectedHttpCode = HttpCode.OK;
   test(`Should return status ${expectedHttpCode} and array of articles on GET request`, async () => {
@@ -23,6 +27,7 @@ describe(`Get all articles`, () => {
   });
 });
 
+// articles
 describe(`Create new article`, () => {
   describe(`Create new article with valid params`, () => {
     const expectedHttpCode = HttpCode.CREATED;
@@ -42,8 +47,9 @@ describe(`Create new article`, () => {
       expected = testObj;
     });
 
-    afterAll(async () => {
-      // TODO
+    afterAll(() => {
+      actual = null;
+      expected = null;
     });
 
     // post
@@ -171,6 +177,10 @@ describe(`Create new article`, () => {
           actual = await request(server).post(`/api/articles`).send(testParams.content);
         });
 
+        afterAll(() => {
+          actual = null;
+        });
+
         test(`Should return http code 500`, () => {
           expect(actual.statusCode).toBe(HttpCode.BAD_REQUEST);
         });
@@ -182,8 +192,8 @@ describe(`Create new article`, () => {
 
 // comments
 describe(`Comments tests`, () => {
-  let actual = null;
-  let comment = null;
+  let actual;
+  let comment;
 
   describe(`Create new article`, () => {
     beforeAll(async () => {
@@ -198,13 +208,24 @@ describe(`Comments tests`, () => {
       actual = await request(server).post(`/api/articles`).send(testObj);
     });
 
+    afterAll(() => {
+      actual = null;
+      comment = null;
+    });
+
     describe(`Create comment with valid params`, () => {
+      let newComment;
+
       beforeAll(async () => {
-        const newComment = {
+        newComment = {
           text: `comment text`
         };
 
         comment = await request(server).post(`/api/articles/${actual.body.id}/comments`).send(newComment);
+      });
+
+      afterAll(() => {
+        newComment = null;
       });
 
       // post
