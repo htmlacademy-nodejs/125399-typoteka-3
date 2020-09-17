@@ -1,10 +1,10 @@
 'use strict';
 
 const {
-  HttpCode,
   API_PREFIX
 } = require(`../../constants`);
-
+const {getLogger} = require(`../../logger`);
+const logger = getLogger();
 
 const chalk = require(`chalk`);
 const express = require(`express`);
@@ -20,12 +20,22 @@ const createApp = async (data) => {
   const apiRoutes = await createApi(data);
 
   app.use(express.json());
+
+  app.use((req, res, next) => {
+    logger.debug(`Start request to url ${req.url}`);
+    next();
+  });
+
   app.use(API_PREFIX, apiRoutes);
 
 
-  app.use((req, res) => res
-    .status(HttpCode.NOT_FOUND)
-    .send(`Not found`));
+  // app.use((req, res) => {
+  //   res
+  //     .status(HttpCode.NOT_FOUND)
+  //     .send(`Not found`);
+
+  //   logger.info(`Request finished with code: ${res.statusCode}`);
+  // });
 
   return app;
 };
@@ -38,9 +48,11 @@ const run = async (args) => {
 
   app.listen(port, (err) => {
     if (err) {
+      logger.error(`Can't launch server with error% ${err}`);
       return console.error(`Ошибка при создании сервера`, err);
     }
 
+    logger.info(`Server launched. Listening port: ${port}`);
     return console.info(chalk.green(`Ожидаю соединений на ${port}`));
   });
 };

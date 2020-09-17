@@ -9,6 +9,9 @@ const {
   articleExist
 } = require(`../middlewares`);
 
+const {getLogger} = require(`../../logger`);
+const logger = getLogger();
+
 const articlesRouter = new express.Router();
 
 module.exports = (app, articleService, commentService) => {
@@ -17,6 +20,8 @@ module.exports = (app, articleService, commentService) => {
   articlesRouter.get(`/`, (req, res) => {
     const articles = articleService.findAll();
     res.status(HttpCode.OK).json(articles);
+
+    logger.info(`End request with status code ${res.statusCode}`);
   });
 
   articlesRouter.get(`/:articleId`, (req, res) => {
@@ -24,10 +29,13 @@ module.exports = (app, articleService, commentService) => {
     const article = articleService.findOne(articleId);
 
     if (!article) {
+      logger.error(`Article with ID ${articleId} is not found`);
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found with ${articleId}`);
     }
 
+
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.OK)
       .json(article);
   });
@@ -35,6 +43,7 @@ module.exports = (app, articleService, commentService) => {
   articlesRouter.post(`/`, articleValidator, (req, res) => {
     const article = articleService.create(req.body);
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.CREATED)
       .json(article);
   });
@@ -44,12 +53,14 @@ module.exports = (app, articleService, commentService) => {
     const existarticle = articleService.findOne(articleId);
 
     if (!existarticle) {
+      logger.error(`Article with ID ${articleId} is not found`);
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found with ${articleId}`);
     }
 
     const updatedArticle = articleService.update(articleId, req.body);
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.OK)
       .json(updatedArticle);
   });
@@ -59,10 +70,12 @@ module.exports = (app, articleService, commentService) => {
     const article = articleService.drop(articleId);
 
     if (!article) {
+      logger.error(`Article with ID ${articleId} is not found`);
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.OK)
       .json(article);
   });
@@ -72,10 +85,12 @@ module.exports = (app, articleService, commentService) => {
     const comments = commentService.findAll(article);
 
     if (!article) {
+      logger.error(`Article is not found`);
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.OK)
       .json(comments);
 
@@ -85,6 +100,7 @@ module.exports = (app, articleService, commentService) => {
     const {article} = res.locals;
     const comment = commentService.create(article, req.body);
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.CREATED)
       .json(comment);
   });
@@ -95,10 +111,12 @@ module.exports = (app, articleService, commentService) => {
     const deletedComment = commentService.drop(article, commentId);
 
     if (!deletedComment) {
+      logger.error(`Comment with ID ${commentId} is not found`);
       return res.status(HttpCode.NOT_FOUND)
         .send(`Not found`);
     }
 
+    logger.info(`End request with status code ${res.statusCode}`);
     return res.status(HttpCode.OK)
       .json(deletedComment);
   });
