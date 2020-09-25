@@ -4,278 +4,323 @@
 const request = require(`supertest`);
 const {createApp} = require(`../cli/server`);
 const articlesMocks = require(`../../mocks/articlesMocks`);
-const {HttpCode} = require(`../../constants`);
 
 let server;
+let actual;
+let expected;
+let result;
+let comment;
 
+const newArticleMock = {
+  "title": `title-1`,
+  "createdDate": `2020-07-14T16:33:44.300Z`,
+  "announce": `announce-1`,
+  "fullText": `fullText-1`,
+  "category": [`category-1`],
+};
+
+const newComment = {
+  text: `comment text`
+};
 
 beforeAll(async () => {
   server = await createApp(articlesMocks);
 });
 
-afterAll(() => {
-  server = null;
-});
+const codeOk = 200;
+const codeCreated = 201;
+const codeBadRequest = 400;
+const codeNotFound = 404;
 
-describe(`Get all articles`, () => {
-  const expectedHttpCode = HttpCode.OK;
-  test(`Should return status ${expectedHttpCode} and array of articles on GET request`, async () => {
-    const actual = await request(server).get((`/api/articles`));
+describe(`Articles API end-points`, () => {
 
-    expect(actual.statusCode).toBe(HttpCode.OK);
-    expect(actual.body).toBeInstanceOf(Array);
-  });
-});
-
-// articles
-describe(`Create new article`, () => {
-  describe(`Create new article with valid params`, () => {
-    const expectedHttpCode = HttpCode.CREATED;
-    let actual = null;
-    let expected = null;
-
+  describe(`Get all articles`, () => {
     beforeAll(async () => {
-      const testObj = {
-        "title": `title-1`,
-        "createdDate": `2020-07-14T16:33:44.300Z`,
-        "announce": `announce-1`,
-        "fullText": `fullText-1`,
-        "category": [`category-1`],
-      };
-
-      actual = await request(server).post(`/api/articles`).send(testObj);
-      expected = testObj;
+      actual = await request(server).get((`/api/articles`));
     });
 
-    afterAll(() => {
-      actual = null;
-      expected = null;
+    test(`Should return status ${codeOk}`, async () => {
+      expect(actual.statusCode).toBe(codeOk);
     });
 
-    // post
-    describe(`post requests`, () => {
-      test(`Should return ${expectedHttpCode} by post`, () => {
-        expect(actual.statusCode).toBe(expectedHttpCode);
+    test(`Should return array of articles`, async () => {
+      expect(actual.body).toBeInstanceOf(Array);
+    });
+  });
+
+  describe(`Create new article`, () => {
+
+    describe(`With valid params`, () => {
+      beforeAll(async () => {
+        actual = await request(server).post(`/api/articles`).send(newArticleMock);
+        expected = newArticleMock;
       });
 
-      test(`Should return expected object by post`, () => {
+      test(`Should return ${codeCreated}`, () => {
+        expect(actual.statusCode).toBe(codeCreated);
+      });
+
+      test(`Should return expected object`, () => {
         expect(actual.body).toMatchObject(expected);
       });
 
       test(`Should return object with id`, () => {
         expect(actual.body).toHaveProperty(`id`);
       });
-
     });
 
-    // get article
-    describe(`get requests article by id`, () => {
-      test(`Should get article with valid id`, async () => {
-        const targetArticleResult = await request(server).get((`/api/articles/${actual.body.id}`));
-        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
-        expect(targetArticleResult.body.id).toBe(actual.body.id);
-      });
-      test(`Should return status ${HttpCode.NOT_FOUND} for wrong request`, async () => {
-        const targetArticleResult = await request(server).get((`/api/articles/wrongId`));
-        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
-      });
-    });
+    describe(`With invalid params`, () => {
+      const testArr = [
+        {
+          missingParameter: `title`,
+          content: {
+            "createdDate": `2020-07-14T16:33:44.300Z`,
+            "announce": `announce-1`,
+            "fullText": `fullText-1`,
+            "category": [`category-1`]
+          }
+        }, {
+          missingParameter: `createdDate`,
+          content: {
+            "title": `title-1`,
+            "announce": `announce-1`,
+            "fullText": `fullText-1`,
+            "category": [`category-1`],
+          }
 
-    // put
-    describe(`put requests`, () => {
-      const newObj = {
-        "title": `title-2`,
-        "createdDate": `2020-07-14T16:33:44.300Z`,
-        "announce": `announce-1`,
-        "fullText": `fullText-1`,
-        "category": [`category-1`],
-      };
-      test(`Should return status ${HttpCode.OK} for article update & updated object`, async () => {
+        }, {
+          missingParameter: `announce`,
+          content: {
+            "title": `title-1`,
+            "createdDate": `2020-07-14T16:33:44.300Z`,
+            "fullText": `fullText-1`,
+            "category": [`category-1`],
+          }
 
-        const targetArticleResult = await request(server).put(`/api/articles/${actual.body.id}`).send(newObj);
+        }, {
+          missingParameter: `fullText`,
+          content: {
+            "title": `title-1`,
+            "createdDate": `2020-07-14T16:33:44.300Z`,
+            "announce": `announce-1`,
+            "category": [`category-1`],
+          }
 
-        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
-        expect(targetArticleResult.body.comments).toBeInstanceOf(Object);
-      });
+        },
+        {
+          missingParameter: `category`,
+          content: {
+            "title": `title-1`,
+            "createdDate": `2020-07-14T16:33:44.300Z`,
+            "announce": `announce-1`,
+            "fullText": `fullText-1`,
+          }
 
-      test(`Should return status ${HttpCode.NOT_FOUND} for update article request with wrong ID`, async () => {
-        const targetArticleResult = await request(server).put(`/api/articles/wrongId`).send(newObj);
-        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
-      });
-    });
-
-
-    // delete
-    describe(`delete requests`, () => {
-      test(`Should return status ${HttpCode.OK} for delete article request`, async () => {
-        const targetArticleResult = await request(server).delete(`/api/articles/${actual.body.id}`);
-
-        expect(targetArticleResult.statusCode).toBe(HttpCode.OK);
-      });
-
-      test(`Should return status ${HttpCode.NOT_FOUND} for delete article request with wrong ID`, async () => {
-        const targetArticleResult = await request(server).delete(`/api/articles/wrongId`);
-        expect(targetArticleResult.statusCode).toBe(HttpCode.NOT_FOUND);
-      });
-    });
-
-  });
-
-  describe(`Create new article with invalid params`, () => {
-    const testArr = [
-      {
-        missingParameter: `title`,
-        content: {
-          "createdDate": `2020-07-14T16:33:44.300Z`,
-          "announce": `announce-1`,
-          "fullText": `fullText-1`,
-          "category": [`category-1`]
         }
-      }, {
-        missingParameter: `createdDate`,
-        content: {
-          "title": `title-1`,
-          "announce": `announce-1`,
-          "fullText": `fullText-1`,
-          "category": [`category-1`],
-        }
+      ];
 
-      }, {
-        missingParameter: `announce`,
-        content: {
-          "title": `title-1`,
-          "createdDate": `2020-07-14T16:33:44.300Z`,
-          "fullText": `fullText-1`,
-          "category": [`category-1`],
-        }
+      describe.each(testArr)(`Create article without some params `, (testParams) => {
+        describe(`Without parameter ${testParams.missingParameter}`, () => {
+          beforeAll(async () => {
+            actual = await request(server).post(`/api/articles`).send(testParams.content);
+          });
 
-      }, {
-        missingParameter: `fullText`,
-        content: {
-          "title": `title-1`,
-          "createdDate": `2020-07-14T16:33:44.300Z`,
-          "announce": `announce-1`,
-          "category": [`category-1`],
-        }
+          test(`Should return http code ${codeBadRequest}`, () => {
+            expect(actual.statusCode).toBe(codeBadRequest);
+          });
 
-      },
-      {
-        missingParameter: `category`,
-        content: {
-          "title": `title-1`,
-          "createdDate": `2020-07-14T16:33:44.300Z`,
-          "announce": `announce-1`,
-          "fullText": `fullText-1`,
-        }
-
-      }
-    ];
-    describe.each(testArr)(`Create article without some params `, (testParams) => {
-      describe(`Create article without parameter ${testParams.missingParameter}`, () => {
-        let actual = {};
-        beforeAll(async () => {
-          actual = await request(server).post(`/api/articles`).send(testParams.content);
         });
-
-        afterAll(() => {
-          actual = null;
-        });
-
-        test(`Should return http code 500`, () => {
-          expect(actual.statusCode).toBe(HttpCode.BAD_REQUEST);
-        });
-
       });
     });
   });
-});
 
-// comments
-describe(`Comments tests`, () => {
-  let actual;
-  let comment;
-
-  describe(`Create new article`, () => {
+  describe(`Get new article by ID`, () => {
     beforeAll(async () => {
-      const testObj = {
-        "title": `title-1`,
-        "createdDate": `2020-07-14T16:33:44.300Z`,
-        "announce": `announce-1`,
-        "fullText": `fullText-1`,
-        "category": [`category-1`],
-      };
-
-      actual = await request(server).post(`/api/articles`).send(testObj);
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+      expected = newArticleMock;
     });
 
-    afterAll(() => {
-      actual = null;
-      comment = null;
-    });
-
-    describe(`Create comment with valid params`, () => {
-      let newComment;
-
+    describe(`With valid ID`, () => {
       beforeAll(async () => {
-        newComment = {
-          text: `comment text`
-        };
-
-        comment = await request(server).post(`/api/articles/${actual.body.id}/comments`).send(newComment);
+        result = await request(server).get((`/api/articles/${actual.body.id}`));
       });
 
-      afterAll(() => {
-        newComment = null;
+      test(`Should return ${codeCreated}`, () => {
+        expect(actual.statusCode).toBe(codeCreated);
       });
 
-      // post
-      describe(`Creating results`, () => {
-        test(`Should return object with comments by new article creating`, () => {
-          expect(actual.body).toHaveProperty(`comments`);
-          expect(actual.body.comments).toBeInstanceOf(Array);
-        });
+      test(`Should return article with valid ID`, () => {
+        expect(result.body.id).toBe(actual.body.id);
+      });
+    });
 
-        test(`Should return status ${HttpCode.CREATED} by new comment creating`, () => {
-          expect(comment.statusCode).toBe(HttpCode.CREATED);
-        });
-
-        test(`Should return object with id`, () => {
-          expect(comment.body).toBeInstanceOf(Object);
-          expect(comment.body).toHaveProperty(`id`);
-        });
+    describe(`With invalid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).get(`/api/articles/wrongId`);
       });
 
-      // get
-      describe(`Get comments by article ID`, () => {
-        test(`Should return status ${HttpCode.OK} for getting article comments & return array`, async () => {
-          const targetArticleComments = await request(server).get(`/api/articles/${actual.body.id}/comments`);
+      test(`Should return status ${codeNotFound}`, async () => {
+        expect(result.statusCode).toBe(codeNotFound);
+      });
+    });
+  });
 
-          expect(targetArticleComments.statusCode).toBe(HttpCode.OK);
-          expect(targetArticleComments.body).toBeInstanceOf(Array);
-        });
+  describe(`Put some changes in article by ID`, () => {
+    const newObj = {
+      ...newArticleMock,
+      "title": `title-2`,
+    };
 
-        test(`Should return status ${HttpCode.NOT_FOUND} for getting article comments with wrong article ID`, async () => {
-          const targetArticleComments = await request(server).get(`/api/articles/wrongId/comments`);
-          expect(targetArticleComments.statusCode).toBe(HttpCode.NOT_FOUND);
-        });
+    beforeAll(async () => {
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+      expected = newObj;
+    });
+
+    describe(`With valid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).put(`/api/articles/${actual.body.id}`).send(newObj);
       });
 
-      // delete
-      describe(`Delete comment by ID`, () => {
-        test(`Should return status ${HttpCode.OK} & return deleted object for delete article comment`, async () => {
-          const targetArticleComment = await request(server).delete(`/api/articles/${actual.body.id}/comments/${comment.body.id}`);
+      test(`Should return status ${codeOk}`, async () => {
+        expect(result.statusCode).toBe(codeOk);
+      });
 
-          expect(targetArticleComment.statusCode).toBe(HttpCode.OK);
-          expect(targetArticleComment.body).toBeInstanceOf(Object);
-        });
+      test(`Should return object`, async () => {
+        expect(result.body.comments).toBeInstanceOf(Object);
+      });
 
-        test(`Should return status ${HttpCode.NOT_FOUND} for delete article comment with wrong ID`, async () => {
-          const targetArticleComment = await request(server).delete(`/api/articles/${actual.body.id}/comments/wrongId`);
-          expect(targetArticleComment.statusCode).toBe(HttpCode.NOT_FOUND);
-        });
+      test(`Should return updated object with expected parameter`, async () => {
+        expect(result.body.title).toBe(expected.title);
+      });
+    });
+    describe(`With invalid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).put(`/api/articles/wrongId`).send(newObj);
+      });
+
+      test(`Should return status ${codeNotFound}`, async () => {
+        expect(result.statusCode).toBe(codeNotFound);
+      });
+    });
+
+  });
+
+  describe(`Delete article by ID`, () => {
+    beforeAll(async () => {
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+    });
+
+    describe(`With valid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).delete(`/api/articles/${actual.body.id}`);
+      });
+
+      test(`Should return status ${codeOk}`, async () => {
+        expect(result.statusCode).toBe(codeOk);
       });
 
     });
 
+    describe(`With invalid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).delete(`/api/articles/wrongId`);
+      });
+
+      test(`Should return status ${codeNotFound} for delete article request with wrong ID`, async () => {
+        expect(result.statusCode).toBe(codeNotFound);
+      });
+    });
+  });
+
+  describe(`Create new comment`, () => {
+    beforeAll(async () => {
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+      comment = await request(server).post(`/api/articles/${actual.body.id}/comments`).send(newComment);
+    });
+
+    test(`New article should have property comments`, () => {
+      expect(actual.body).toHaveProperty(`comments`);
+    });
+
+    test(`Property comments should be instance of Array`, () => {
+      expect(actual.body.comments).toBeInstanceOf(Array);
+    });
+
+    test(`Comment creating should return status ${codeCreated}`, () => {
+      expect(comment.statusCode).toBe(codeCreated);
+    });
+
+    test(`Comment creating should return Object`, () => {
+      expect(comment.body).toBeInstanceOf(Object);
+    });
+
+    test(`Comment creating should have property ID`, () => {
+      expect(comment.body).toHaveProperty(`id`);
+    });
+  });
+
+  describe(`Get comments by article ID`, () => {
+    beforeAll(async () => {
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+    });
+
+    describe(`With valid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).get(`/api/articles/${actual.body.id}/comments`);
+      });
+
+      test(`Should return status ${codeOk}`, async () => {
+        expect(result.statusCode).toBe(codeOk);
+      });
+
+      test(`Response body should be instance of Array`, async () => {
+        expect(result.body).toBeInstanceOf(Array);
+      });
+    });
+
+    describe(`With invalid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).get(`/api/articles/wrongId/comments`);
+      });
+
+      test(`Should return status ${codeNotFound}`, async () => {
+        expect(result.statusCode).toBe(codeNotFound);
+      });
+    });
+  });
+
+  describe(`Delete comments by article ID`, () => {
+    beforeAll(async () => {
+      actual = await request(server).post(`/api/articles`).send(newArticleMock);
+      comment = await request(server).post(`/api/articles/${actual.body.id}/comments`).send(newComment);
+    });
+
+    describe(`With valid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).delete(`/api/articles/${actual.body.id}/comments/${comment.body.id}`);
+      });
+
+      test(`Should return status ${codeOk}`, async () => {
+        expect(result.statusCode).toBe(codeOk);
+      });
+
+      test(`Response body should be instance of Object`, async () => {
+        expect(result.body).toBeInstanceOf(Object);
+      });
+
+      test(`Should return object with same ID`, async () => {
+        expect(result.body.id).toBe(comment.body.id);
+      });
+    });
+
+    describe(`With invalid ID`, () => {
+      beforeAll(async () => {
+        result = await request(server).delete(`/api/articles/${actual.body.id}/comments/wrongId`);
+      });
+
+      test(`Should return status ${codeNotFound}`, async () => {
+        expect(result.statusCode).toBe(codeNotFound);
+      });
+    });
   });
 });

@@ -4,7 +4,6 @@
 const request = require(`supertest`);
 const {createApp} = require(`../cli/server`);
 const articlesMocks = require(`../../mocks/articlesMocks`);
-const {HttpCode} = require(`../../constants`);
 
 let server;
 let actual;
@@ -13,25 +12,21 @@ beforeAll(async () => {
   server = await createApp(articlesMocks);
 });
 
-afterAll(() => {
-  server = null;
-});
-
-
 describe(`Search API end-points`, () => {
-
-  afterAll(() => {
-    actual = null;
-  });
-
+  const codeNotFound = 404;
+  const codeBadRequest = 400;
+  const codeOk = 200;
 
   describe(`Search with valid parameters`, () => {
     beforeAll(async () => {
       actual = await request(server).get(encodeURI(`/api/search?query=title`));
     });
 
-    test(`Should return status ${HttpCode.OK}`, async () => {
-      expect(actual.statusCode).toBe(HttpCode.OK);
+    test(`Should return status ${codeOk}`, async () => {
+      expect(actual.statusCode).toBe(codeOk);
+    });
+
+    test(`Should return array`, async () => {
       expect(actual.body).toBeInstanceOf(Array);
     });
   });
@@ -43,8 +38,8 @@ describe(`Search API end-points`, () => {
     });
 
 
-    test(`Should return status ${HttpCode.BAD_REQUEST}`, async () => {
-      expect(actual.statusCode).toBe(HttpCode.BAD_REQUEST);
+    test(`Should return status ${codeBadRequest}`, async () => {
+      expect(actual.statusCode).toBe(codeBadRequest);
     });
   });
 
@@ -55,8 +50,8 @@ describe(`Search API end-points`, () => {
     });
 
 
-    test(`Should return status ${HttpCode.NOT_FOUND}`, async () => {
-      expect(actual.statusCode).toBe(HttpCode.NOT_FOUND);
+    test(`Should return status ${codeNotFound}`, async () => {
+      expect(actual.statusCode).toBe(codeNotFound);
     });
   });
 
