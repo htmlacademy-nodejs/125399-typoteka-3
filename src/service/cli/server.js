@@ -28,15 +28,6 @@ const createApp = async (data) => {
 
   app.use(API_PREFIX, apiRoutes);
 
-
-  // app.use((req, res) => {
-  //   res
-  //     .status(HttpCode.NOT_FOUND)
-  //     .send(`Not found`);
-
-  //   logger.info(`Request finished with code: ${res.statusCode}`);
-  // });
-
   return app;
 };
 
