@@ -3,7 +3,7 @@
 const axios = require(`axios`);
 const TIMEOUT = 1000;
 const port = process.env.API_PORT || 3000;
-const defaultUrl = `http://localhost:${port}/api/`;
+const defaultUrl = `http://localhost:${port}/api`;
 
 
 class API {
@@ -15,16 +15,21 @@ class API {
   }
 
   async _load(url, options) {
-    const response = await this._http.request({url, ...options});
-    return response.data;
+    let response;
+    try {
+      response = await this._http.request({url, ...options});
+    } catch (err) {
+      console.error(err);
+    }
+    return response;
   }
 
-  getOffers() {
-    return this._load(`/offers`);
+  getArticles() {
+    return this._load(`/articles`);
   }
 
   getOffer(id) {
-    return this._load(`/offers/${id}`);
+    return this._load(`/articles/${id}`);
   }
 
   search(query) {
@@ -36,7 +41,7 @@ class API {
   }
 
   async createOffer(data) {
-    return this._load(`/offers`, {
+    return this._load(`/articles`, {
       method: `POST`,
       data
     });
